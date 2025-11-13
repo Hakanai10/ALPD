@@ -1,0 +1,2 @@
+D:\VS2022\Microsoft Visual Studio\Myprojects\Limited1\Debug\Limited1.exe
+D:\编程作业（代码）\限时项目1\22231-040104-W0901.第04模块 作业 - PART3 - 在递归中使用全局和静态局部变量（限时编程）\作业文件\Limited1 - 副本\Debug\Limited1.exe

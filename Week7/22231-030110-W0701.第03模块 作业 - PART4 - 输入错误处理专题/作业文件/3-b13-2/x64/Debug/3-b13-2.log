@@ -1,0 +1,4 @@
+﻿  3-b12-2.c
+D:\VS2022\Microsoft Visual Studio\Myprojects\3-b13-2\3-b12-2.c(76,13): warning C4047: “函数”:“const char *const ”与“int”的间接级别不同
+D:\VS2022\Microsoft Visual Studio\Myprojects\3-b13-2\3-b12-2.c(76,9): warning C4024: “printf”: 形参和实参 1 的类型不同
+  3-b13-2.vcxproj -> D:\VS2022\Microsoft Visual Studio\Myprojects\3-b13-2\x64\Debug\3-b13-2.exe

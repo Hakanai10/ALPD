@@ -1,0 +1,89 @@
+int main()
+{
+	/* demo中首先执行此句，将cmd窗口设置为40行x120列（缓冲区宽度120列，行数9000行，即cmd窗口右侧带有垂直滚动杆）*/
+	/* 此处设为150 */
+	cct_setconsoleborder(150, 40, 150, 9000);
+	cct_setcolor(COLOUR_OF_BACKGROUND, COLOUR_OF_DEFAULT);
+
+	while (1)
+	{
+		int number_of_menu = menu();
+		unsigned num;
+		char src, tmp, dst;
+		int is_input_speed;
+
+		if (number_of_menu == 4 || number_of_menu == 8)
+			is_input_speed = 1;
+		else
+			is_input_speed = 0;
+
+		switch (number_of_menu)
+		{
+			case 1:
+			case 2:
+			case 3:
+				input_hanoi(&num, &src, &dst, is_input_speed);
+				tmp = 'A' + 'B' + 'C' - src - dst;
+				if (number_of_menu == 3)
+					print_hanoi(num, src, tmp, dst, 3);
+				hanoi(num, src, tmp, dst, number_of_menu);
+				break;
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				if (number_of_menu != 5)
+				{
+					input_hanoi(&num, &src, &dst, is_input_speed);
+					tmp = 'A' + 'B' + 'C' - src - dst;
+				}
+				cct_cls();
+				cct_setcursor(CURSOR_INVISIBLE);
+
+				switch (number_of_menu)					
+				{
+					case 4:
+					case 8:
+						print_hanoi(num, src, tmp, dst, number_of_menu);
+						hanoi(num, src, tmp, dst, number_of_menu);
+						break;
+					case 5:
+					case 6:
+					case 7:
+						draw_col();
+						if (number_of_menu != 5)
+						{
+							draw_disc();
+							if (number_of_menu == 7)
+								hanoi(num, src, tmp, dst, 7);
+						}
+						break;
+					case 9:
+						hanoigame(num, src, tmp, dst);
+						break;
+				}
+				cct_setcursor(CURSOR_VISIBLE_NORMAL);
+				if (number_of_menu != 9)
+					cct_gotoxy(0, ARRAY_Y + 1);
+
+				break;
+			case 0:
+				return 0;
+				break;
+			default:
+				cout << "运行出错！" << endl;
+				break;
+		}
+
+		cout << "按回车键继续";
+		while (_getch() != '\r')
+			;
+
+		reset();
+		cct_cls();
+	}
+
+	return 0;
+}

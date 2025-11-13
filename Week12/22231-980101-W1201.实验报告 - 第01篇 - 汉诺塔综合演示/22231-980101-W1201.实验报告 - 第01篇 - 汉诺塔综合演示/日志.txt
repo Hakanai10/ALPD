@@ -1,0 +1,197 @@
+此日志不是需要提交的东西，实验报告中可以适度复制粘贴。换句话说就是可以瞎几把写（笑）。
+
+11.23
+正在编写菜单函数和主函数。
+菜单函数用于显示菜单以及输入，主函数负责根据菜单函数的返回值调用各个函数。
+
+递归函数实验。
+将之前用过的最基本的递归函数复制粘贴过来，发现已经占了15行，故需重新寻找方案。
+旧：
+void hanoi(unsigned n, char src, char tmp, char dst)
+{
+	if (n == 1)
+	{
+		col[dst - 'A'][top[dst - 'A']++] = col[src - 'A'][--top[src - 'A']];
+		col[src - 'A'][top[src - 'A']] = 0;
+		num_of_move++;
+	}
+	else
+	{
+		hanoi(n - 1, src, dst, tmp);
+		col[dst - 'A'][top[dst - 'A']++] = col[src - 'A'][--top[src - 'A']];
+		col[src - 'A'][top[src - 'A']] = 0;
+		hanoi(n - 1, tmp, src, dst);
+	}
+}
+新：
+void hanoi(unsigned num, char src, char tmp, char dst)
+{
+	if (num)
+	{
+		hanoi(num - 1, src, dst, tmp);
+		col[dst - 'A'][top[dst - 'A']++] = col[src - 'A'][--top[src - 'A']];
+		col[src - 'A'][top[src - 'A']] = 0;
+		hanoi(num - 1, tmp, src, dst);
+	}
+}
+用类似的方法修改了之前某次作业的递归函数，发现仍然可以正常运行并得出正确结果。
+
+正在试验利用指针型形参进行输入，以及带默认值的指针类型形参进行初始化。
+写了一段极其简单的代码。
+#include <iostream>
+using namespace std;
+
+void input(int* i)
+{
+	cin >> *i;
+}
+
+int main()
+{
+	int i;
+	input(&i);
+	cout << i;
+}
+按照计划运行成功。指针类型形参初始化的值必须是地址（因为我企图给一个char指针形参赋值为'A'，失败了。。。。。。）
+借此写输入函数。
+
+输入函数差不多可以了。。。。。。现在是北京时间2022.11.24 1:08AM。。。。。。没错是熬夜肝的。。。。。。明天还有早八，还有体测1000m。。。。。。
+单走一个6。。。。。。
+先休息，趁着明天下午没课接着肝。。。。。。（这玩意是真尼玛重量级）
+
+11.24
+今天开始写输出函数。
+先搞定1和2的情形（基本解）。
+这个写起来还是很容易的。
+昨天在主函数中写了while(1)，然后执行分支；但是刚才在多次执行2时发现步骤序号不对，发现是全局变量没有重新初始化的问题，于是又加上了这一部分。
+本来是加在主函数的，然后发现好像题目要求不允许，于是在解法cpp文件里加了个重置函数。不仅如此，在发现不允许外部全局变量后，我只好大改输入函数。
+
+cct_cls()感觉有点朝着不对劲的方向运行了。。。。。。（从下午一直搞到半夜，焯）
+今天唯一的进展是：发现用system(cls)可以解决那玩意的错误（？）。。。。。。
+又花了几分钟写出了第3步执行。
+明天开始图形化。（11.25 2:05AM）
+
+想不到今天一天码的东西还不如昨晚那么一两个钟头的多。。。。。。
+
+11.25
+用一种奇怪的方式解决了：改了一下控制台字体，又改了回去。然后那玩意居然好了。。。。。。
+写模块4中。
+调整一下步数这个全局变量。因为在模块4等当中会用到初始状态的输出，步数初值设为1不合适。
+把延时写好：
+void print_visible_number_hanoi()
+{
+    switch (_speed)
+    {
+        case 0:
+            while (_getch() != '\r')
+                ;
+            break;
+        case 1:
+            Sleep(600);
+            break;
+        case 2:
+            Sleep(300);
+            break;
+        case 3:
+            Sleep(150);
+            break;
+        case 4:
+            Sleep(75);
+            break;
+        case 5:
+            Sleep(30);
+            break;
+    }
+    cct_gotoxy(0, 0);
+}
+这个不难，很快就完成了。
+5也是特别简单。
+起初把输出数字汉诺塔的延时语句写在了函数里面，但仔细一想，似乎只有在第4模块才需要用到那个延时，第8模块有自己的延时，直接那样显然不妥，于是移动了那个switch-case语句。
+6。。。。。。6
+经过一段时间，第6个模块也宣告完成。
+接下来这位可更是个重量级寄吧。。。。。。（23:52）
+
+11.26
+第7模块开发中。
+目前发现了第6模块的一个问题，正在修复。（当起始柱不是A时会出错）
+旧：
+void draw_disc()
+{
+    int y = COL_COL_Y - 1;
+    int i, j;
+    int colour_of_disc[10] = { COLOUR_OF_DISC0, COLOUR_OF_DISC1, COLOUR_OF_DISC2, COLOUR_OF_DISC3, COLOUR_OF_DISC4,
+                               COLOUR_OF_DISC5, COLOUR_OF_DISC6, COLOUR_OF_DISC7, COLOUR_OF_DISC8, COLOUR_OF_DISC9 };
+    int x[3] = { A_X,B_X,C_X };
+    for (i = 0; i < 3; i++)
+        for (j = 0; j < 10; j++, y--)
+        {
+            if (_col[i][j])
+            {
+                cct_showch(x[i] - _col[0][j], y, ' ', colour_of_disc[_top[i] - 1 - j], colour_of_disc[_top[i] - 1 - j], _col[0][j] * 2 + 1);
+                Sleep(5);
+            }
+            cct_setcolor(COLOUR_OF_BACKGROUND, COLOUR_OF_DEFAULT);
+        }
+}
+新：
+void draw_disc()
+{
+    int y ;
+    int i, j;
+    int colour_of_disc[10] = { COLOUR_OF_DISC0, COLOUR_OF_DISC1, COLOUR_OF_DISC2, COLOUR_OF_DISC3, COLOUR_OF_DISC4,
+                               COLOUR_OF_DISC5, COLOUR_OF_DISC6, COLOUR_OF_DISC7, COLOUR_OF_DISC8, COLOUR_OF_DISC9 };
+    int x[3] = { A_X,B_X,C_X };
+    for (i = 0; i < 3; i++)
+    {
+        y = COL_COL_Y - 1;
+        for (j = 0; j < 10; j++, y--)
+        {
+            if (_col[i][j])
+            {
+                cct_showch(x[i] - _col[i][j], y, ' ', colour_of_disc[_top[i] - 1 - j], colour_of_disc[_top[i] - 1 - j], _col[i][j] * 2 + 1);
+                Sleep(5);
+            }
+            cct_setcolor(COLOUR_OF_BACKGROUND, COLOUR_OF_DEFAULT);
+        }
+    }
+}
+
+花了大半个下午，总算做出来了7和8。。。。。。（总体还算比较顺利吧）
+现在开始9.
+
+11.30（凌晨12:44AM）
+在咕了好几天之后，劳资终于回来了！哇哈哈哈哈！！！！！（杠铃般的笑声）
+干了两件事情：一是修复了一个显示bug，二是把第9部分基本移动的错误修改正确了。
+加了大盘压小盘的判断。
+试图横向显示内部数组，结果发现失败了。说明前面程序和后续功能的兼容性不高，还需要加以修改。（好麻烦啊啊啊啊）
+
+很快写好了关于源柱为空的判定和游戏结束的判定，至此游戏功能算是基本实现了。
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+目前的问题：
+1.有些地方没有完全按照要求走。
+2.横向数组输出和游戏版本依然不兼容。
+
+
+问题2修复成功。备份，接下来处理问题1。
+
+12.1
+凌晨。
+
+简化了主函数。
+旧版主函数占据108行，新版主函数则占了89行，省去了19行的冗余。
+先睡觉，明天下午接着整。（感觉已经差不多了）
+
+输出函数也处理了一下。
+
+要求已经达到（用参数处理横向数组输出位置差异），接下来开始继续调整代码。
+
+12.2
+完成了一次改进：原本数字汉诺塔是每次都要从头开始输出，现在改成了擦除移走的盘子而输出新的盘子。
+
+又改了两个bug。。。。。。
+
+12.3
+略微修改了一些代码（使之更精简）。
+
+
+

@@ -1,0 +1,108 @@
+int main()
+{
+	/* demo中首先执行此句，将cmd窗口设置为40行x120列（缓冲区宽度120列，行数9000行，即cmd窗口右侧带有垂直滚动杆）*/
+	/* 此处设为150 */
+	cct_setconsoleborder(150, 40, 150, 9000);
+	cct_setcolor(COLOUR_OF_BACKGROUND, COLOUR_OF_DEFAULT);
+
+	while (1)
+	{
+		int number_of_menu = menu();
+		unsigned num;
+		char src, tmp, dst;
+		int is_input_speed;
+
+		if (number_of_menu == 4 || number_of_menu == 8)
+			is_input_speed = 1;
+		else
+			is_input_speed = 0;
+
+		switch (number_of_menu)
+		{
+			case 1:
+			case 2:
+				input_hanoi(&num, &src, &dst, is_input_speed);
+				tmp = 'A' + 'B' + 'C' - src - dst;
+				hanoi(num, src, tmp, dst, number_of_menu);
+				break;
+			case 3:
+				input_hanoi(&num, &src, &dst, is_input_speed);
+				tmp = 'A' + 'B' + 'C' - src - dst;
+				print_hanoi(num, src, tmp, dst, number_of_menu);
+				hanoi(num, src, tmp, dst, number_of_menu);
+				break;
+			case 4:
+			case 8:
+				input_hanoi(&num, &src, &dst, is_input_speed);
+				tmp = 'A' + 'B' + 'C' - src - dst;
+				cct_cls();
+				cct_setcursor(CURSOR_INVISIBLE);
+
+				print_hanoi(num, src, tmp, dst, number_of_menu);
+				hanoi(num, src, tmp, dst, number_of_menu);
+				cct_setcursor(CURSOR_VISIBLE_NORMAL);
+				cct_gotoxy(0, ARRAY_Y + 1);
+				break;
+			case 5:
+				cct_setcursor(CURSOR_INVISIBLE);
+				cct_cls();
+
+				draw_col();
+
+				cct_setcursor(CURSOR_VISIBLE_NORMAL);
+				cct_gotoxy(0, ARRAY_Y + 1);
+				break;
+			case 6:		
+				input_hanoi(&num, &src, &dst, is_input_speed);
+				tmp = 'A' + 'B' + 'C' - src - dst;
+				cct_cls();
+				cct_setcursor(CURSOR_INVISIBLE);
+
+				draw_col();
+				draw_disc();
+
+				cct_setcursor(CURSOR_VISIBLE_NORMAL);
+				cct_gotoxy(0, ARRAY_Y + 1);
+				break;
+
+			case 7:
+				input_hanoi(&num, &src, &dst, is_input_speed);
+				tmp = 'A' + 'B' + 'C' - src - dst;
+				cct_cls();
+				cct_setcursor(CURSOR_INVISIBLE);
+
+				draw_col();
+				draw_disc();
+				hanoi(num, src, tmp, dst, 7);
+				cct_setcursor(CURSOR_VISIBLE_NORMAL);
+				cct_gotoxy(0, ARRAY_Y + 1);
+				break;
+
+			case 9:
+				input_hanoi(&num, &src, &dst, is_input_speed);
+				tmp = 'A' + 'B' + 'C' - src - dst;
+				cct_cls();
+				cct_setcursor(CURSOR_INVISIBLE);
+
+				hanoigame(num, src, tmp, dst);
+
+				cct_setcursor(CURSOR_VISIBLE_NORMAL);
+				break;
+			case 0:
+				return 0;
+				break;
+			default:
+				cout << "运行出错！" << endl;
+				break;
+		}
+
+		cout << "按回车键继续";
+		while (_getch() != '\r')
+			;
+
+		reset();
+		cct_cls();
+	}
+
+	return 0;
+}
